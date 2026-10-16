@@ -8,6 +8,7 @@ import { initEggs } from './eggs.js';
 import { initSlop } from './slop.js';
 import { initMore } from './more.js';
 import { initBloat } from './bloat.js';
+import { initExtra, resetEverything } from './extra.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -243,6 +244,8 @@ hoverScramble();
 const slop = initSlop(fx, eggs);
 slop.more = initMore(fx, eggs, slop.sfx);
 initBloat({ fx, eggs, replayIntro: () => playIntro({ force: true }) });
+initExtra({ fx, eggs });
+window.__mnrReset = resetEverything;
 initTerminal(fx, eggs, slop);
 
 playIntro().then(() => {

@@ -643,3 +643,46 @@ html.potato .flashlight, html.potato .glass-lens, html.potato .blobs { display: 
   .notif-stack { bottom: 70px; }
 }
 html.potato .nav-pro { animation: none; }
+
+/* ================= extra ================= */
+.linkbtn { background: none; border: 0; color: var(--muted); font: inherit; cursor: pointer; text-decoration: underline dotted; }
+.linkbtn:hover { color: var(--xmr-2); }
+.reset p { margin: 0 0 10px; color: #cfcfd3; font-size: 14px; }
+.reset-log { min-height: 0; margin: 0 0 12px; font: 12px var(--mono); color: var(--xmr-2); white-space: pre-wrap; }
+.reset-log:empty { display: none; }
+.reset-btns { display: flex; gap: 8px; justify-content: flex-end; }
+.modal button.danger { background: #b3261e; border-color: #b3261e; color: #fff; }
+.modal button.danger:disabled { opacity: 0.6; }
+
+.trophy-bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 14px; }
+.trophy-bar .fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #c4501a, var(--xmr), #ffb07a); transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.trophies ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; max-height: 60vh; overflow-y: auto; }
+.trophies li { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 12px; border: 1px solid var(--line); opacity: 0.5; }
+.trophies li.got { opacity: 1; border-color: rgba(242,104,34,0.35); background: rgba(242,104,34,0.06); }
+.trophies li strong { display: block; font-size: 14px; }
+.trophies li small { color: var(--muted); font-size: 12px; }
+.trophy-icon { font-size: 22px; }
+
+.nerd {
+  position: fixed; left: 16px; top: 76px; z-index: 66; margin: 0; padding: 12px 14px; border-radius: 12px; pointer-events: none;
+  background: rgba(0,0,0,0.75); border: 1px solid rgba(242,104,34,0.35); font: 12px/1.5 var(--mono); color: #d8d8dc;
+}
+.nerd[hidden] { display: none; }
+.dock [data-nerd].on { color: var(--xmr-2); background: rgba(242, 104, 34, 0.12); border-color: rgba(242, 104, 34, 0.35); }
+.dock [data-reset]:hover { color: #ff6b6b; }
+
+.viewers { display: flex; align-items: center; gap: 8px; margin: 22px 0 0; font: 13px var(--mono); color: var(--muted); animation: rise 0.8s 1.1s both; }
+.viewers i { width: 8px; height: 8px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 10px #3ddc84; animation: blink 1.6s ease-in-out infinite; }
+
+.hidden-coin {
+  position: absolute; z-index: 3; width: 13px; height: 13px; padding: 0; border: 0; background: none; cursor: pointer; opacity: 0.35;
+  transition: opacity 0.2s, scale 0.2s;
+}
+.hidden-coin:hover { opacity: 1; scale: 1.6; }
+.hidden-coin svg { width: 100%; height: 100%; display: block; }
+
+.flyer { position: fixed; left: -60px; z-index: 9; font-size: 34px; pointer-events: none; animation: fly 7s linear forwards; }
+@keyframes fly { 0% { translate: 0 0; } 25% { translate: 30vw -40px; } 50% { translate: 60vw 30px; } 75% { translate: 85vw -20px; } 100% { translate: calc(100vw + 120px) 10px; } }
+html.spooky .grain { background: radial-gradient(60vw 60vw at 15% 10%, rgba(242, 104, 34, 0.16), transparent 60%), radial-gradient(50vw 50vw at 90% 80%, rgba(90, 40, 120, 0.12), transparent 60%); }
+
+@media (max-width: 760px) { .nerd { top: 64px; left: 8px; } }

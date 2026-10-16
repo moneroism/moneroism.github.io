@@ -1,10 +1,14 @@
-// background: drifting nodes that link up when close. pauses when the tab is hidden.
+// animated backgrounds. modes: network (default), stars, matrix, off. pauses when the tab is hidden.
+import { settings } from './settings.js';
+
+export const BG_MODES = ['network', 'stars', 'matrix', 'off'];
 
 export function startBackground(canvas) {
   const ctx = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let w, h, dpr, nodes, raf;
+  let w, h, dpr, nodes, stars, drops, raf;
   const mouse = { x: -1e4, y: -1e4 };
+  const mode = () => settings.get('bg') || 'network';
 
   function resize() {
     dpr = Math.min(devicePixelRatio || 1, 2);
@@ -20,9 +24,11 @@ export function startBackground(canvas) {
       vy: (Math.random() - 0.5) * 0.25 * dpr,
       r: (Math.random() * 1.4 + 0.6) * dpr,
     }));
+    stars = Array.from({ length: 220 }, () => ({ x: (Math.random() - 0.5) * w, y: (Math.random() - 0.5) * h, z: Math.random() * w }));
+    drops = Array.from({ length: Math.ceil(w / (16 * dpr)) }, () => Math.random() * -50);
   }
 
-  function frame() {
+  function network() {
     ctx.clearRect(0, 0, w, h);
     const link = 130 * dpr;
     for (const n of nodes) {
@@ -30,7 +36,6 @@ export function startBackground(canvas) {
       n.y += n.vy;
       if (n.x < 0 || n.x > w) n.vx *= -1;
       if (n.y < 0 || n.y > h) n.vy *= -1;
-      // gentle push away from the cursor
       const dx = n.x - mouse.x, dy = n.y - mouse.y, d = Math.hypot(dx, dy);
       if (d < 120 * dpr && d > 0) {
         n.x += (dx / d) * 0.6;
@@ -56,6 +61,49 @@ export function startBackground(canvas) {
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();
     }
+  }
+
+  // warp-speed starfield, steered a little by the mouse
+  function starfield() {
+    ctx.fillStyle = 'rgba(10,10,11,0.35)';
+    ctx.fillRect(0, 0, w, h);
+    const cx = w / 2 + (mouse.x > -1e3 ? (mouse.x - w / 2) * 0.15 : 0);
+    const cy = h / 2 + (mouse.y > -1e3 ? (mouse.y - h / 2) * 0.15 : 0);
+    for (const s of stars) {
+      s.z -= 6 * dpr;
+      if (s.z <= 1) (s.z = w), (s.x = (Math.random() - 0.5) * w), (s.y = (Math.random() - 0.5) * h);
+      const k = (128 * dpr) / s.z;
+      const x = cx + s.x * k, y = cy + s.y * k;
+      const r = Math.max(0.4, (1 - s.z / w) * 2.4 * dpr);
+      ctx.fillStyle = s.z < w / 3 ? '#ffb07a' : 'rgba(242,104,34,0.7)';
+      ctx.fillRect(x, y, r, r);
+    }
+  }
+
+  const GLYPHS = '01XMR<>[]{}#$%&*+=/|ɱ';
+  function matrix() {
+    ctx.fillStyle = 'rgba(10,10,11,0.12)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.font = `${14 * dpr}px ui-monospace, monospace`;
+    for (let i = 0; i < drops.length; i++) {
+      const y = drops[i] * 16 * dpr;
+      ctx.fillStyle = Math.random() < 0.05 ? '#ffd2b0' : 'rgba(242,104,34,0.55)';
+      ctx.fillText(GLYPHS[(Math.random() * GLYPHS.length) | 0], i * 16 * dpr, y);
+      drops[i] += 0.5;
+      if (y > h && Math.random() > 0.975) drops[i] = 0;
+    }
+  }
+
+  let lastMode = null;
+  function frame() {
+    const m = document.documentElement.classList.contains('potato') ? 'off' : mode();
+    if (m !== lastMode) {
+      ctx.clearRect(0, 0, w, h);
+      lastMode = m;
+    }
+    if (m === 'network') network();
+    else if (m === 'stars') starfield();
+    else if (m === 'matrix') matrix();
     raf = requestAnimationFrame(frame);
   }
 
@@ -67,8 +115,7 @@ export function startBackground(canvas) {
   }, { passive: true });
 
   if (reduce) {
-    frame();
-    cancelAnimationFrame(raf);
+    network();
     return;
   }
   frame();

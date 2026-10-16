@@ -54,6 +54,10 @@ export const ACHIEVEMENTS = {
   spam: ['subscriber', 'subscribed to the newsletter'],
   rated: ['critic', 'rated the website'],
   update: ['patch tuesday', 'installed an update'],
+  nerd: ['nerd', 'opened stats for nerds'],
+  wallpaper: ['wake up, neo', 'set the matrix background'],
+  hunt: ['treasure hunter', 'found all 5 hidden coins'],
+  season: ['seasonal', 'visited during an event'],
   all: ['completionist', 'found every achievement'],
 };
 

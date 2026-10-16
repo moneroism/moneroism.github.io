@@ -1,6 +1,6 @@
 // user toggles (rain, trail, potato). saved in localStorage, never leaves the browser.
 const KEY = 'mnr:settings';
-const defaults = { rain: true, trail: true, potato: false, sfx: false, crt: false, light: false, glass: false };
+const defaults = { rain: true, trail: true, potato: false, sfx: false, crt: false, light: false, glass: false, bg: 'network' };
 const listeners = new Set();
 
 let state = { ...defaults };

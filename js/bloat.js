@@ -155,7 +155,7 @@ function initNavBloat({ eggs }) {
   if (sel.value !== 'english') setTimeout(() => translate(sel.value), 50);
 }
 
-function modal(title, content, { wide = false } = {}) {
+export function modal(title, content, { wide = false } = {}) {
   const box = h('div', { class: 'modal' + (wide ? ' wide' : '') },
     h('button', { type: 'button', class: 'modal-x', 'aria-label': 'close', text: '✕', onclick: () => close() }),
     h('h3', { text: title }),

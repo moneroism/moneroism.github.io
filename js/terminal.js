@@ -79,6 +79,8 @@ export function initTerminal(fx, eggs, slop) {
       const s = slop?.clicker.stats();
       if (s) print(`balance: ${s.pico} piconero · rate: ${s.rate}/s · all time: ${s.total}`);
     }],
+    reset: ['clear cache & cookies (wipe everything)', () => (close(), window.__mnrReset?.())],
+    bg: ['switch background', () => (document.querySelector('[data-bg]')?.click(), print(`background: ${settings.get('bg')}`))],
     update: ['check for updates', () => (close(), window.__mnrUpdate?.())],
     weather: ['local weather', () => print("probably fine. we don't know where you are, and that's the point.")],
     visitors: ['visitor count', () => print('1. it is always 1. counting would mean tracking.')],

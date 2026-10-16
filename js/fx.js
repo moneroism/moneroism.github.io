@@ -253,6 +253,7 @@ export function initFx() {
     shake(n = 10) {
       shake = n;
     },
+    stats: () => ({ coins: coins.length, parts: parts.length }),
     rainOf(ch, ms = 4000) {
       emojiChar = ch;
       emojiUntil = performance.now() + ms;

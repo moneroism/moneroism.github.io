@@ -1,0 +1,35 @@
+{
+  "name": "moneroism.github.io",
+  "version": "0.9.13",
+  "private": true,
+  "description": "personal site. no telemetry.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build && node scripts/telemetry-guard.mjs dist",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p tsconfig.node.json",
+    "lint": "eslint .",
+    "fmt": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "guard": "node scripts/telemetry-guard.mjs dist",
+    "clean": "rm -rf dist node_modules/.vite"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^24.19.2",
+    "eslint": "^9.39.5",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "sass": "^1.105.2",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

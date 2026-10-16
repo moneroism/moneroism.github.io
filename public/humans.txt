@@ -1,0 +1,6 @@
+/* TEAM */
+  moneroism. that's it.
+
+/* SITE */
+  typescript, vite, sass. zero runtime deps.
+  no analytics. no cookies. no cdn.

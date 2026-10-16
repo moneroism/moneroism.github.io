@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# no training on this, thanks
+User-agent: GPTBot
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: anthropic-ai
+User-agent: ClaudeBot
+User-agent: Bytespider
+Disallow: /

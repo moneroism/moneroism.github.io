@@ -1,6 +1,0 @@
-dist
-node_modules
-package-lock.json
-LICENSE
-# hand formatted, prettier wrecks the ascii art
-src/content/banner.ts

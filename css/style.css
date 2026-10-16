@@ -133,9 +133,6 @@ code { font-family: var(--mono); font-size: 0.9em; color: var(--xmr-2); }
 
 .about-text { max-width: 640px; }
 .about-text p { font-size: 18px; color: #cfcfd3; margin: 0 0 18px; }
-  display: grid; gap: 2px; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--line);
-  background: rgba(255,255,255,0.02); transition: border-color 0.3s, transform 0.3s;
-}
 
 /* cards */
 .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -427,3 +424,68 @@ html.crt main { filter: contrast(1.08) saturate(1.1); }
   .clicker { left: 12px; right: 12px; width: auto; bottom: 64px; }
   .cookies { right: 16px; bottom: 70px; }
 }
+
+/* ---- flashlight ---- */
+.flashlight { display: none; }
+html.light .flashlight {
+  display: block; position: fixed; inset: 0; z-index: 140; pointer-events: none; --lx: 50vw; --ly: 50vh;
+  background: radial-gradient(circle 190px at var(--lx) var(--ly), rgba(255, 220, 180, 0.06) 0, transparent 55%, rgba(3, 3, 4, 0.97) 100%);
+}
+html.light .flashlight.flicker { animation: lightflicker 0.4s steps(3); }
+@keyframes lightflicker { 33% { opacity: 0.4; } 66% { opacity: 0.9; } }
+html.light .dock, html.light .cursor-ring { z-index: 160; }
+
+/* ---- liquid glass ---- */
+.blobs, .glass-lens { display: none; }
+html.glass .blobs { display: block; position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.blobs i { position: absolute; width: 42vw; aspect-ratio: 1; border-radius: 50%; filter: blur(60px); opacity: 0.55; }
+.blobs i:nth-child(1) { background: #f26822; left: -8vw; top: 10vh; animation: blob1 18s ease-in-out infinite alternate; }
+.blobs i:nth-child(2) { background: #8f3a10; right: -10vw; top: 40vh; animation: blob2 22s ease-in-out infinite alternate; }
+.blobs i:nth-child(3) { background: #4c4c4c; left: 30vw; bottom: -20vh; animation: blob1 26s ease-in-out infinite alternate-reverse; }
+@keyframes blob1 { to { translate: 30vw 20vh; scale: 1.3; } }
+@keyframes blob2 { to { translate: -35vw -25vh; scale: 0.8; } }
+
+html.glass :is(.card, .contact-box, .dock, .clicker, .cookies, .term-win, .btn:not(.btn-primary), .nav.scrolled, .achievement, .term-btn, .toast, .physics-reset) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02) 60%) !important;
+  backdrop-filter: blur(14px) saturate(190%) brightness(1.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 1px 0 0 rgba(255, 255, 255, 0.12),
+    inset 0 -8px 20px rgba(255, 255, 255, 0.03),
+    inset 0 0 30px rgba(255, 255, 255, 0.04),
+    0 12px 40px rgba(0, 0, 0, 0.35) !important;
+}
+html.glass .card::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.08) 45%, transparent 55%);
+  background-size: 250% 100%; animation: sheen 6s ease-in-out infinite;
+}
+@keyframes sheen { 0%, 100% { background-position: 120% 0; } 50% { background-position: -20% 0; } }
+
+html.glass .glass-lens {
+  display: block; position: fixed; left: -70px; top: -70px; width: 140px; height: 140px; z-index: 120; pointer-events: none;
+  border-radius: 46% 54% 52% 48% / 50% 46% 54% 50%;
+  backdrop-filter: blur(5px) saturate(1.8) brightness(1.15);
+  backdrop-filter: url(#liquid) blur(1px) saturate(1.8) brightness(1.15);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), transparent 35%), radial-gradient(circle at 70% 80%, rgba(242, 104, 34, 0.12), transparent 50%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25), inset 0 6px 14px rgba(255, 255, 255, 0.25), inset 0 -10px 20px rgba(0, 0, 0, 0.25), 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: morph 5s ease-in-out infinite;
+}
+@keyframes morph {
+  33% { border-radius: 58% 42% 46% 54% / 44% 58% 42% 56%; }
+  66% { border-radius: 42% 58% 60% 40% / 56% 40% 60% 44%; }
+}
+html.glass .cursor-ring { display: none; }
+
+/* ---- physics ---- */
+html.physics { overflow: hidden; }
+html.physics .phys { animation: none !important; transition: none; cursor: grab; user-select: none; touch-action: none; }
+html.physics .phys:active { cursor: grabbing; }
+.physics-reset {
+  position: fixed; top: 80px; left: 50%; translate: -50% 0; z-index: 130; font: 600 14px var(--mono); cursor: pointer;
+  color: #fff; background: var(--xmr); border: 0; border-radius: 12px; padding: 10px 18px; box-shadow: 0 8px 30px rgba(242,104,34,0.4);
+}
+.physics-reset[hidden] { display: none; }
+
+html.potato .flashlight, html.potato .glass-lens, html.potato .blobs { display: none !important; }

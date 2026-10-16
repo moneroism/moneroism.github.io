@@ -71,6 +71,9 @@ export function initTerminal(fx, eggs, slop) {
     rain: ['toggle monero rain', (a) => toggle('rain', a)],
     sfx: ['toggle sound effects', (a) => toggle('sfx', a)],
     crt: ['toggle crt mode', (a) => toggle('crt', a)],
+    flashlight: ['toggle flashlight', (a) => toggle('light', a)],
+    glass: ['toggle liquid glass', (a) => toggle('glass', a)],
+    physics: ['let the page fall apart (esc to undo)', () => (close(), setTimeout(() => slop?.more?.physics.toggle(), 250))],
     clicker: ['open the xmr clicker', () => (close(), slop?.clicker.toggle(true))],
     stats: ['clicker stats', () => {
       const s = slop?.clicker.stats();

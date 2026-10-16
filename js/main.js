@@ -6,6 +6,7 @@ import { playIntro } from './intro.js';
 import { settings, isPotato } from './settings.js';
 import { initEggs } from './eggs.js';
 import { initSlop } from './slop.js';
+import { initMore } from './more.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -239,6 +240,7 @@ const eggs = initEggs(fx, { replayIntro: () => playIntro({ force: true }) });
 konami(fx, eggs);
 hoverScramble();
 const slop = initSlop(fx, eggs);
+slop.more = initMore(fx, eggs, slop.sfx);
 initTerminal(fx, eggs, slop);
 
 playIntro().then(() => {

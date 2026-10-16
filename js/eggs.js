@@ -36,6 +36,10 @@ export const ACHIEVEMENTS = {
   pico: ['piconaire', 'earned 1,000,000 piconero in the clicker'],
   sfx: ['audiophile', 'turned on sound'],
   crt: ['retro', 'turned on crt mode'],
+  light: ['who turned off the lights', 'used the flashlight'],
+  glass: ['liquid glass', 'turned on liquid glass'],
+  physics: ['it fell apart', 'turned on physics'],
+  yeet: ['yeet', 'threw something really hard'],
   all: ['completionist', 'found every achievement'],
 };
 

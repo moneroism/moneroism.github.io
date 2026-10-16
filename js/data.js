@@ -2,9 +2,10 @@
 
 export const profile = {
   handle: 'moneroism',
-  taglines: ['free software enjoyer', 'currently building cig'],
+  taglines: ['free software enjoyer', 'privacy is not a crime', "verify, don't trust", 'software without telemetry'],
   bio: [
     'i write free software in my spare time, mostly low-level stuff.',
+    'i care about privacy. software should do what you ask and nothing else, without telemetry or tracking.',
   ],
 };
 

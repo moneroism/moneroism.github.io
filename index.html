@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080909" />
+  <title>moneroism</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="mark" href="#home" aria-label="Home">
+      <span class="mark-symbol">M</span>
+      <span class="status-dot"></span>
+    </a>
+
+    <nav class="nav">
+      <a href="#home" aria-label="Home"></a>
+      <a href="#projects" aria-label="Projects"></a>
+      <a href="https://github.com/moneroism"
+         target="_blank" rel="noopener"
+         aria-label="GitHub" class="github-link">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.14.68-3.8-1.34-3.8-1.34-.5-1.3-1.26-1.65-1.26-1.65-1.03-.7.08-.7.08-.7 1.14.08 1.74 1.16 1.74 1.16 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.5-.29-5.13-1.25-5.13-5.55 0-1.23.44-2.23 1.16-3.02-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.55.23 2.69.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.31-2.63 5.25-5.14 5.53.4.35.76 1.03.76 2.08v3.14c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"/>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="orbit orbit-outer"></div>
+      <div class="orbit orbit-inner"></div>
+
+      <div class="coin-wrap" id="coin">
+        <div class="coin">
+          <div class="coin-face">
+            <svg class="monero-logo" viewBox="0 0 100 100"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-label="Monero logo" role="img">
+              <circle cx="50" cy="50" r="47"
+                      fill="#f26822"/>
+              <path d="M50 14a36 36 0 0 0-36 36v10h20V50a16 16 0 0 1 32 0v10h20V50A36 36 0 0 0 50 14Z"
+                    fill="#fff"/>
+              <path d="M14 60h20v10H14zM66 60h20v10H66z"
+                    fill="#fff"/>
+              <path d="M14 70h20l16-16 16 16h20V60H66L50 44 34 60H14Z"
+                    fill="#fff"/>
+            </svg>
+            <div class="coin-shine"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-ring"></div>
+      <div class="scroll-indicator">
+        <span></span>
+      </div>
+    </section>
+
+    <section class="projects" id="projects">
+      <a class="project-card" href="https://github.com/moneroism/cig"
+         target="_blank" rel="noopener" aria-label="CIG project">
+        <div class="project-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M32 5 57 19v26L32 59 7 45V19L32 5Z"
+                  fill="none" stroke="currentColor"
+                  stroke-width="1.5"/>
+            <path d="M21 23h22v5H21zM21 31h22v5H21zM21 39h14v5H21z"
+                  fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="project-arrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17 17 7M7 7h10v10"
+                  fill="none" stroke="currentColor"
+                  stroke-width="1.5"/>
+          </svg>
+        </span>
+      </a>
+
+      <a class="project-card secondary-card"
+         href="https://github.com/moneroism"
+         target="_blank" rel="noopener" aria-label="GitHub profile">
+        <div class="project-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.14.68-3.8-1.34-3.8-1.34-.5-1.3-1.26-1.65-1.26-1.65-1.03-.7.08-.7.08-.7 1.14.08 1.74 1.16 1.74 1.16 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.5-.29-5.13-1.25-5.13-5.55 0-1.23.44-2.23 1.16-3.02-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.55.23 2.69.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.31-2.63 5.25-5.14 5.53.4.35.76 1.03.76 2.08v3.14c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"
+                  fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="project-arrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17 17 7M7 7h10v10"
+                  fill="none" stroke="currentColor"
+                  stroke-width="1.5"/>
+          </svg>
+        </span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="footer-line"></span>
+    <span class="footer-orb"></span>
+    <span class="footer-line"></span>
+  </footer>
+</body>
+</html>

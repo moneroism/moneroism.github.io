@@ -27,9 +27,6 @@ function rich(text) {
 
 function renderAbout() {
   $('#bio').append(...profile.bio.map((p) => el('p', null, p)));
-  $('#principles').append(
-    ...profile.principles.map(([k, v]) => el('li', null, el('strong', null, k), el('span', null, v))),
-  );
 }
 
 function renderProjects() {
@@ -56,14 +53,14 @@ function renderContact() {
   const box = (title, content) => el('div', 'contact-box', el('h3', null, title), content);
   body.append(
     box(
-      'reach me',
+      'contact',
       contact.length
         ? el('ul', null, contact.map((c) => el('li', null, el('span', 'muted', c.label + ' '), c.href ? link(c.href, c.value) : c.value)))
-        : el('p', 'muted', 'nothing here yet. for now, ', link(github, 'github'), '.'),
+        : el('p', 'muted', 'for now, ', link(github, 'github'), '.'),
     ),
     box(
       'donate (xmr)',
-      donate.xmr ? el('code', 'addr', donate.xmr) : el('p', 'muted', 'address coming soon.'),
+      donate.xmr ? el('code', 'addr', donate.xmr) : el('p', 'muted', 'soon.'),
     ),
   );
 }
@@ -91,6 +88,7 @@ function typeLoop() {
     ci += del ? -1 : 1;
     out.textContent = line.slice(0, ci);
     let wait = del ? 35 : 75;
+    if (!del && ci === line.length && lines.length === 1) return; // type once, stop
     if (!del && ci === line.length) (del = true), (wait = 1800);
     else if (del && ci === 0) (del = false), (li = (li + 1) % lines.length), (wait = 400);
     setTimeout(tick, wait);

@@ -41,10 +41,9 @@ export function initTerminal() {
     help: ['list commands', () => {
       for (const [name, [desc]] of Object.entries(commands)) if (desc) print(`  ${pad(name, 12)}${desc}`);
     }],
-    whoami: ['who is this', () => print(`${profile.handle} — ${profile.taglines[0]}`)],
+    whoami: ['who is this', () => print(profile.handle)],
     about: ['about me', () => {
       profile.bio.forEach((p) => (print(p), print()));
-      profile.principles.forEach(([k, v]) => print(`  ${pad(k, 16)}${v}`));
     }],
     projects: ['list projects', () => {
       projects.forEach((p) => print(`  ${pad(p.id, 12)}${pad('[' + p.status + ']', 13)}${p.tagline}`));
@@ -52,10 +51,10 @@ export function initTerminal() {
       print("type a project's name for details, e.g. `cig`");
     }],
     contact: ['how to reach me', () => {
-      if (!contact.length) print(`nothing here yet. for now: ${github}`);
+      if (!contact.length) print(github);
       contact.forEach((c) => print(`  ${pad(c.label, 10)}${c.value}`));
     }],
-    donate: ['monero address', () => print(donate.xmr || 'address coming soon.')],
+    donate: ['monero address', () => print(donate.xmr || 'soon.')],
     github: ['open github', () => (window.open(github, '_blank', 'noopener'), print(github))],
     goto: ['scroll the page: goto about|projects|contact', (a) => {
       if (['about', 'projects', 'contact', 'top'].includes(a[0])) go('#' + a[0]);
@@ -64,9 +63,8 @@ export function initTerminal() {
     clear: ['clear screen', () => (out.textContent = '')],
     exit: ['close terminal', () => close()],
     // hidden
-    sudo: [null, () => print("nice try. there is no root here.", 'err')],
+    sudo: [null, () => print('no.', 'err')],
     ls: [null, () => print('about  projects  contact  donate')],
-    telemetry: [null, () => print('0 trackers. 0 cookies. 0 bytes sent. CSP blocks every connection.')],
   };
   for (const p of projects) {
     commands[p.id] = [null, () => {
@@ -119,7 +117,7 @@ export function initTerminal() {
     requestAnimationFrame(() => term.classList.add('open'));
     if (!greeted) {
       greeted = true;
-      print(`welcome. type 'help' to get started.`, 'hl');
+      print(`type 'help' for commands.`, 'hl');
       print();
     }
     input.focus();

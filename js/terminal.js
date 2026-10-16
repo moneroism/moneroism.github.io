@@ -79,6 +79,7 @@ export function initTerminal(fx, eggs, slop) {
       const s = slop?.clicker.stats();
       if (s) print(`balance: ${s.pico} piconero · rate: ${s.rate}/s · all time: ${s.total}`);
     }],
+    update: ['check for updates', () => (close(), window.__mnrUpdate?.())],
     weather: ['local weather', () => print("probably fine. we don't know where you are, and that's the point.")],
     visitors: ['visitor count', () => print('1. it is always 1. counting would mean tracking.')],
     ping: ['ping something', () => print("ping: this page can't make network requests. 0 packets sent, 0 received, 100% private")],

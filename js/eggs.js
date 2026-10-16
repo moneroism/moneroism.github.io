@@ -19,11 +19,23 @@ export const ACHIEVEMENTS = {
   boom: ['self destruct', 'blew up the website'],
   magnet: ['magnetic personality', "held m to pull coins"],
   logo: ['dizzy', 'hovered the nav logo 5 times'],
-  shake: ['shaker', 'shook your phone'],
+  shake: ['shaker', 'shook your phone (or your mouse)'],
   terminal: ['hacker', 'opened the terminal'],
   hack: ['in the mainframe', "ran 'hack'"],
   sudo: ['nice try', 'tried sudo'],
   matrix: ['red pill', 'typed matrix'],
+  moon: ['to the moon', 'sent the coins to the moon'],
+  gm: ['gm', 'said gm'],
+  lambo: ['wrong community', 'asked about lambos'],
+  dvd: ['impatient', 'summoned the screensaver early'],
+  flip: ['australian', 'flipped the site upside down'],
+  cookies: ['cookie inspector', 'customized 0 cookies'],
+  visitor: ['visitor #1', 'clicked the visitor counter 5 times'],
+  game: ['first rig', 'bought something in the clicker'],
+  asic: ['asic resistant', 'tried to buy an asic'],
+  pico: ['piconaire', 'earned 1,000,000 piconero in the clicker'],
+  sfx: ['audiophile', 'turned on sound'],
+  crt: ['retro', 'turned on crt mode'],
   all: ['completionist', 'found every achievement'],
 };
 
@@ -263,6 +275,27 @@ export function initEggs(fx, { replayIntro }) {
     }
   });
 
+  // --- shake the mouse (for devices without motion sensors) ---
+  let lastX = 0, dir = 0, flips = [];
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const dx = e.clientX - lastX;
+    lastX = e.clientX;
+    if (Math.abs(dx) < 12) return;
+    const d = Math.sign(dx);
+    if (d !== dir) {
+      dir = d;
+      const now = performance.now();
+      flips = flips.filter((t) => now - t < 1200);
+      flips.push(now);
+      if (flips.length >= 10) {
+        flips = [];
+        fx.storm(3000);
+        eggs.unlock('shake');
+      }
+    }
+  }, { passive: true });
+
   // --- fake miner ---
   const minerBtn = $('[data-miner]');
   let mining = null;
@@ -299,7 +332,7 @@ export function initEggs(fx, { replayIntro }) {
   // --- screensaver: bouncing coin after 45s idle ---
   let idleT;
   let saver = null;
-  const startSaver = () => {
+  const startSaver = (eggs.saver = () => {
     if (isPotato() || saver) return;
     eggs.unlock('idle');
     const el = document.createElement('div');
@@ -328,7 +361,7 @@ export function initEggs(fx, { replayIntro }) {
     };
     saver = el;
     requestAnimationFrame(step);
-  };
+  });
   const resetIdle = () => {
     clearTimeout(idleT);
     if (saver) {

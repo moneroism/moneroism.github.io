@@ -339,3 +339,91 @@ html.greyscale body { filter: grayscale(1) contrast(0.9); transition: filter 0.4
 .saver svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(242, 104, 34, 0.5)) brightness(calc(1 - var(--shade) * 0.15)); }
 
 .dock [data-miner].on { color: var(--xmr-2); background: rgba(242, 104, 34, 0.12); border-color: rgba(242, 104, 34, 0.35); min-width: 112px; }
+
+/* ---- round 3 slop ---- */
+.hero-title span { transition: translate 0.25s cubic-bezier(.3,1.6,.5,1); }
+.hero-title span:hover { translate: 0 -14px; }
+
+.cards, .contact, .about-text { transform: skewY(var(--skew, 0deg)); }
+
+html.flipped body { rotate: 180deg; transition: rotate 0.8s cubic-bezier(.6,0,.3,1); }
+body { transition: rotate 0.8s cubic-bezier(.6,0,.3,1); }
+
+/* crt */
+.crt-overlay { display: none; }
+html.crt .crt-overlay {
+  display: block; position: fixed; inset: 0; z-index: 150; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+  animation: flicker 0.12s steps(2) infinite;
+}
+html.crt body { text-shadow: 0 0 6px rgba(255, 140, 70, 0.35); }
+html.crt main { filter: contrast(1.08) saturate(1.1); }
+@keyframes flicker { 50% { opacity: 0.93; } }
+
+/* ticker */
+.ticker {
+  overflow: hidden; white-space: nowrap; border-block: 1px solid rgba(242,104,34,0.25);
+  background: rgba(242, 104, 34, 0.05); font: 13px var(--mono); color: var(--xmr-2); padding: 9px 0;
+}
+.ticker-track { display: inline-block; animation: ticker 90s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+@keyframes ticker { to { translate: -50% 0; } }
+
+/* visitor counter */
+.visitor { cursor: pointer; user-select: none; }
+.odo { display: inline-flex; gap: 2px; margin-left: 6px; vertical-align: middle; }
+.odo span {
+  display: inline-block; width: 1.15em; text-align: center; font: 700 14px var(--mono); color: var(--xmr-2);
+  background: #151517; border: 1px solid #2a2a2e; border-radius: 3px; padding: 1px 0;
+}
+.odo span.roll { animation: roll 0.5s cubic-bezier(.3,1.4,.5,1) both; }
+@keyframes roll { 0% { translate: 0 -100%; opacity: 0; } 100% { translate: 0; opacity: 1; } }
+
+/* cookie banner */
+.cookies {
+  position: fixed; right: 18px; bottom: 18px; z-index: 40; width: min(380px, calc(100vw - 32px));
+  padding: 18px; border-radius: 16px; background: rgba(18,18,20,0.97); border: 1px solid var(--line);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5); font-size: 14px; translate: 0 140%; transition: translate 0.5s cubic-bezier(.2,1.1,.3,1);
+}
+.cookies.show { translate: 0 0; }
+.cookies p { margin: 0 0 12px; color: #cfcfd3; }
+.cookies-custom[hidden] { display: none; }
+.cookies-custom { display: grid; gap: 6px; margin-bottom: 12px; font: 13px var(--mono); color: var(--muted); }
+.cookies-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.cookies-btns button {
+  font: 600 13px var(--sans); padding: 8px 12px; border-radius: 10px; cursor: pointer;
+  color: var(--fg); background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+}
+.cookies-btns .primary { background: var(--xmr); border-color: var(--xmr); color: #fff; }
+
+/* clicker */
+.clicker {
+  position: fixed; left: 16px; bottom: 70px; z-index: 45; width: 290px; padding: 16px; border-radius: 16px;
+  background: rgba(16,16,18,0.97); border: 1px solid rgba(242,104,34,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  font: 13px var(--mono);
+}
+.clicker[hidden] { display: none; }
+.clicker-head { display: flex; justify-content: space-between; align-items: center; color: var(--xmr-2); }
+.clicker-x { background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; }
+.clicker-bal { font: 800 28px var(--sans); margin-top: 8px; }
+.clicker-bal small, .clicker-rate small { font: 12px var(--mono); color: var(--muted); }
+.clicker-rate { color: var(--muted); margin-bottom: 10px; }
+.clicker-shop { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.clicker-shop button {
+  width: 100%; display: flex; justify-content: space-between; gap: 8px; text-align: left; cursor: pointer;
+  font: 12.5px var(--mono); color: var(--fg); background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 10px; transition: border-color 0.2s, background 0.2s;
+}
+.clicker-shop button:hover { border-color: rgba(242,104,34,0.5); background: rgba(242,104,34,0.08); }
+.clicker-shop button.poor { opacity: 0.45; }
+.clicker-shop small { color: var(--muted); white-space: nowrap; }
+.clicker-foot { margin: 10px 0 0; color: #55555b; font-size: 11px; }
+.dock [data-clicker].on { color: var(--xmr-2); background: rgba(242, 104, 34, 0.12); border-color: rgba(242, 104, 34, 0.35); }
+
+@media (max-width: 760px) {
+  .dock { max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none; }
+  .clicker { left: 12px; right: 12px; width: auto; bottom: 64px; }
+  .cookies { right: 16px; bottom: 70px; }
+}

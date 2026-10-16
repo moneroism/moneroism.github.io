@@ -5,7 +5,7 @@ import { playIntro } from './intro.js';
 
 const $ = (s) => document.querySelector(s);
 
-export function initTerminal(fx, eggs) {
+export function initTerminal(fx, eggs, slop) {
   const term = $('#term');
   const out = $('#term-out');
   const input = $('#term-in');
@@ -69,6 +69,16 @@ export function initTerminal(fx, eggs) {
       else print('usage: goto about|projects|contact', 'err');
     }],
     rain: ['toggle monero rain', (a) => toggle('rain', a)],
+    sfx: ['toggle sound effects', (a) => toggle('sfx', a)],
+    crt: ['toggle crt mode', (a) => toggle('crt', a)],
+    clicker: ['open the xmr clicker', () => (close(), slop?.clicker.toggle(true))],
+    stats: ['clicker stats', () => {
+      const s = slop?.clicker.stats();
+      if (s) print(`balance: ${s.pico} piconero · rate: ${s.rate}/s · all time: ${s.total}`);
+    }],
+    weather: ['local weather', () => print("probably fine. we don't know where you are, and that's the point.")],
+    visitors: ['visitor count', () => print('1. it is always 1. counting would mean tracking.')],
+    ping: ['ping something', () => print("ping: this page can't make network requests. 0 packets sent, 0 received, 100% private")],
     trail: ['toggle cursor trail', (a) => toggle('trail', a)],
     potato: ['turn off all effects', (a) => toggle('potato', a)],
     storm: ['make it rain', () => (close(), fx?.storm(8000))],

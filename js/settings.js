@@ -1,6 +1,6 @@
 // user toggles (rain, trail, potato). saved in localStorage, never leaves the browser.
 const KEY = 'mnr:settings';
-const defaults = { rain: true, trail: true, potato: false };
+const defaults = { rain: true, trail: true, potato: false, sfx: false, crt: false };
 const listeners = new Set();
 
 let state = { ...defaults };
@@ -8,7 +8,10 @@ try {
   state = { ...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
 } catch {}
 
-const apply = () => document.documentElement.classList.toggle('potato', state.potato);
+const apply = () => {
+  document.documentElement.classList.toggle('potato', state.potato);
+  document.documentElement.classList.toggle('crt', state.crt);
+};
 apply();
 
 export const settings = {

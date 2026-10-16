@@ -7,6 +7,10 @@ const G = 1800; // px/s^2
 const MAX_COINS = 70;
 const MAX_PARTS = 500;
 
+// other modules can listen in (sfx)
+export const hooks = { bounce: null };
+let gScale = 1;
+
 export function initFx() {
   const canvas = document.getElementById('fx');
   const ctx = canvas.getContext('2d');
@@ -101,7 +105,7 @@ export function initFx() {
         c.vy *= 0.97;
         c.resting = 0;
       }
-      c.vy += G * dt;
+      c.vy += G * gScale * dt;
       c.x += c.vx * dt;
       c.y += c.vy * dt;
       c.spin += c.vs * dt;
@@ -112,6 +116,7 @@ export function initFx() {
         if (c.vy > 220 && c.bounces < 3) {
           // splat
           c.squash = Math.min(0.65, c.vy / 1400);
+          hooks.bounce?.(c.r, c.vy);
           spark(c.x, H - 2, 3 + ((c.vy / 300) | 0), c.vy * 0.35);
           c.vy = -c.vy * 0.42;
           c.vx *= 0.7;
@@ -125,7 +130,7 @@ export function initFx() {
       }
       if (c.x < c.r || c.x > W - c.r) c.vx *= -1;
       if (c.resting > 0.4 || c.bounces >= 3) c.alpha -= dt * 1.6;
-      if (c.alpha <= 0) coins.splice(i, 1);
+      if (c.alpha <= 0 || c.y < -300) coins.splice(i, 1);
     }
 
     for (let i = parts.length - 1; i >= 0; i--) {
@@ -251,6 +256,10 @@ export function initFx() {
     rainOf(ch, ms = 4000) {
       emojiChar = ch;
       emojiUntil = performance.now() + ms;
+    },
+    antigravity(ms = 4000) {
+      gScale = -0.5;
+      setTimeout(() => (gScale = 1), ms);
     },
     setMagnet(v) {
       magnet = v;

@@ -1,7 +1,5 @@
 # moneroism.github.io
 
-personal site. plain html/css/js, no build step, no dependencies, no trackers.
-
-text lives in `js/data.js`. press `` ` `` on the site for the terminal.
+Personal site. Static HTML and CSS, no JavaScript, no third-party requests.
 
 GPL-3.0

@@ -14,6 +14,8 @@
 </head>
 <body>
   <canvas id="bg" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="progress" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
   <header class="nav">
@@ -47,17 +49,17 @@
     </section>
 
     <section id="about" class="section reveal">
-      <h2 class="section-title"><span>01</span> about</h2>
+      <h2 class="section-title"><span>01</span> <span class="t">about</span></h2>
       <div class="about-text" id="bio"></div>
     </section>
 
     <section id="projects" class="section reveal">
-      <h2 class="section-title"><span>02</span> projects</h2>
+      <h2 class="section-title"><span>02</span> <span class="t">projects</span></h2>
       <div class="cards" id="cards"></div>
     </section>
 
     <section id="contact" class="section reveal">
-      <h2 class="section-title"><span>03</span> contact</h2>
+      <h2 class="section-title"><span>03</span> <span class="t">contact</span></h2>
       <div class="contact" id="contact-body"></div>
     </section>
   </main>
@@ -65,6 +67,12 @@
   <footer class="footer">
     <p><a href="https://github.com/moneroism/moneroism.github.io" target="_blank" rel="noopener noreferrer">source</a> · GPL-3.0</p>
   </footer>
+
+  <div class="dock" aria-label="effects">
+    <button type="button" data-toggle="rain" title="monero rain">rain</button>
+    <button type="button" data-toggle="trail" title="cursor trail">trail</button>
+    <button type="button" data-toggle="potato" title="turn off all effects">🥔 potato</button>
+  </div>
 
   <div class="term" id="term" hidden>
     <div class="term-win" role="dialog" aria-label="terminal">

@@ -1,6 +1,9 @@
 import { profile, projects, contact, donate, github } from './data.js';
 import { startBackground } from './bg.js';
 import { initTerminal } from './terminal.js';
+import { initFx } from './fx.js';
+import { playIntro } from './intro.js';
+import { settings, isPotato } from './settings.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -43,6 +46,12 @@ function renderProjects() {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', `${e.clientX - r.left}px`);
       card.style.setProperty('--my', `${e.clientY - r.top}px`);
+      card.style.setProperty('--rx', `${((e.clientY - r.top) / r.height - 0.5) * -8}deg`);
+      card.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 8}deg`);
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
     });
     $('#cards').append(card);
   }
@@ -100,7 +109,14 @@ function reveal() {
   const items = document.querySelectorAll('.reveal');
   if (reduce || !('IntersectionObserver' in window)) return items.forEach((i) => i.classList.add('in'));
   const io = new IntersectionObserver(
-    (es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
+    (es) =>
+      es.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+        const t = e.target.querySelector('.section-title .t');
+        if (t) scramble(t);
+      }),
     { threshold: 0.12 },
   );
   items.forEach((i) => io.observe(i));
@@ -128,13 +144,89 @@ function navShadow() {
   f();
 }
 
+// "decrypt" a heading from random glyphs
+const GLYPHS = '01#$%&*+=?<>[]XMR';
+function scramble(node) {
+  const final = node.textContent;
+  if (isPotato() || reduce) return;
+  let frame = 0;
+  const total = 24;
+  const tick = () => {
+    frame++;
+    node.textContent = [...final]
+      .map((ch, i) => (i < (frame / total) * final.length ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
+      .join('');
+    if (frame < total) requestAnimationFrame(tick);
+    else node.textContent = final;
+  };
+  tick();
+}
+
+// buttons lean toward the cursor
+function magnetic() {
+  document.querySelectorAll('.btn, .term-btn, .dock button').forEach((b) => {
+    b.addEventListener('pointermove', (e) => {
+      if (isPotato()) return;
+      const r = b.getBoundingClientRect();
+      b.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.25}px ${(e.clientY - r.top - r.height / 2) * 0.35}px`;
+    });
+    b.addEventListener('pointerleave', () => (b.style.translate = ''));
+  });
+}
+
+function progressBar() {
+  const bar = $('.progress');
+  const f = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.scale = `${max > 0 ? scrollY / max : 0} 1`;
+  };
+  addEventListener('scroll', f, { passive: true });
+  f();
+}
+
+function dock() {
+  const btns = document.querySelectorAll('[data-toggle]');
+  const sync = () => btns.forEach((b) => b.classList.toggle('on', !!settings.get(b.dataset.toggle)));
+  btns.forEach((b) => b.addEventListener('click', () => settings.toggle(b.dataset.toggle)));
+  settings.on(sync);
+  sync();
+}
+
+// up up down down left right left right b a
+function konami(fx) {
+  const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let i = 0;
+  addEventListener('keydown', (e) => {
+    i = e.key === seq[i] ? i + 1 : e.key === seq[0] ? 1 : 0;
+    if (i === seq.length) {
+      i = 0;
+      fx.storm(8000);
+    }
+  });
+}
+
 renderAbout();
 renderProjects();
 renderContact();
 splitTitle();
-typeLoop();
-reveal();
-heroParallax();
 navShadow();
+progressBar();
+dock();
+magnetic();
 startBackground($('#bg'));
-initTerminal();
+const fx = initFx();
+konami(fx);
+initTerminal(fx);
+
+// clicking the big coin makes it rain harder
+$('.coin').addEventListener('click', (e) => {
+  fx.burst(e.clientX, e.clientY, 18);
+  fx.shake(6);
+});
+
+playIntro().then(() => {
+  document.documentElement.classList.add('ready');
+  typeLoop();
+  reveal();
+  heroParallax();
+});

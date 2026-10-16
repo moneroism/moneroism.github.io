@@ -1,9 +1,11 @@
 // a small terminal that can be used instead of the page. press ` or click >_ to open.
 import { profile, projects, contact, donate, github } from './data.js';
+import { settings } from './settings.js';
+import { playIntro } from './intro.js';
 
 const $ = (s) => document.querySelector(s);
 
-export function initTerminal() {
+export function initTerminal(fx) {
   const term = $('#term');
   const out = $('#term-out');
   const input = $('#term-in');
@@ -31,6 +33,12 @@ export function initTerminal() {
   };
 
   const pad = (s, n) => s + ' '.repeat(Math.max(1, n - s.length));
+
+  const toggle = (k, a) => {
+    const v = a[0] === 'on' ? true : a[0] === 'off' ? false : !settings.get(k);
+    settings.set(k, v);
+    print(`${k} ${v ? 'on' : 'off'}`);
+  };
 
   const go = (hash) => {
     close();
@@ -60,6 +68,11 @@ export function initTerminal() {
       if (['about', 'projects', 'contact', 'top'].includes(a[0])) go('#' + a[0]);
       else print('usage: goto about|projects|contact', 'err');
     }],
+    rain: ['toggle monero rain', (a) => toggle('rain', a)],
+    trail: ['toggle cursor trail', (a) => toggle('trail', a)],
+    potato: ['turn off all effects', (a) => toggle('potato', a)],
+    storm: ['make it rain', () => (close(), fx?.storm(8000))],
+    intro: ['replay the loading intro', () => (close(), playIntro({ force: true }))],
     clear: ['clear screen', () => (out.textContent = '')],
     exit: ['close terminal', () => close()],
     // hidden

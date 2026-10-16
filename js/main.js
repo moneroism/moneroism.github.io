@@ -4,6 +4,7 @@ import { initTerminal } from './terminal.js';
 import { initFx } from './fx.js';
 import { playIntro } from './intro.js';
 import { settings, isPotato } from './settings.js';
+import { initEggs } from './eggs.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -115,7 +116,8 @@ function reveal() {
         e.target.classList.add('in');
         io.unobserve(e.target);
         const t = e.target.querySelector('.section-title .t');
-        if (t) scramble(t);
+        if (t) scramble(t, 1600);
+        e.target.querySelectorAll('.card h3, .contact-box h3').forEach((h, i) => setTimeout(() => scramble(h, 1200), 300 + i * 200));
       }),
     { threshold: 0.12 },
   );
@@ -144,22 +146,38 @@ function navShadow() {
   f();
 }
 
-// "decrypt" a heading from random glyphs
-const GLYPHS = '01#$%&*+=?<>[]XMR';
-function scramble(node) {
+// "decrypt" text from random glyphs. each char locks in at its own random time
+const GLYPHS = '01#$%&*+=?<>[]{}/\\|XMR';
+const scrambling = new WeakSet();
+export function scramble(el, duration = 1500) {
+  const node = [...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+  if (!node || scrambling.has(node) || isPotato() || reduce) return;
+  scrambling.add(node);
   const final = node.textContent;
-  if (isPotato() || reduce) return;
-  let frame = 0;
-  const total = 24;
-  const tick = () => {
-    frame++;
-    node.textContent = [...final]
-      .map((ch, i) => (i < (frame / total) * final.length ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
-      .join('');
-    if (frame < total) requestAnimationFrame(tick);
-    else node.textContent = final;
+  const lockAt = [...final].map((_, i) => duration * (0.25 + 0.75 * (i / final.length) * (0.6 + Math.random() * 0.4)));
+  const t0 = performance.now();
+  let lastSwap = 0;
+  const tick = (now) => {
+    const t = now - t0;
+    if (now - lastSwap > 55) {
+      lastSwap = now;
+      node.textContent = [...final]
+        .map((ch, i) => (ch === ' ' || t >= lockAt[i] ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
+        .join('');
+    }
+    if (t < duration) requestAnimationFrame(tick);
+    else {
+      node.textContent = final;
+      scrambling.delete(node);
+    }
   };
-  tick();
+  requestAnimationFrame(tick);
+}
+
+function hoverScramble() {
+  document.querySelectorAll('.nav nav a, .card h3, .section-title .t, .nav-logo span').forEach((el) =>
+    el.addEventListener('pointerenter', () => scramble(el, 700)),
+  );
 }
 
 // buttons lean toward the cursor
@@ -193,7 +211,7 @@ function dock() {
 }
 
 // up up down down left right left right b a
-function konami(fx) {
+function konami(fx, eggs) {
   const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   let i = 0;
   addEventListener('keydown', (e) => {
@@ -201,6 +219,7 @@ function konami(fx) {
     if (i === seq.length) {
       i = 0;
       fx.storm(8000);
+      eggs.unlock('konami');
     }
   });
 }
@@ -215,14 +234,10 @@ dock();
 magnetic();
 startBackground($('#bg'));
 const fx = initFx();
-konami(fx);
-initTerminal(fx);
-
-// clicking the big coin makes it rain harder
-$('.coin').addEventListener('click', (e) => {
-  fx.burst(e.clientX, e.clientY, 18);
-  fx.shake(6);
-});
+const eggs = initEggs(fx, { replayIntro: () => playIntro({ force: true }) });
+konami(fx, eggs);
+hoverScramble();
+initTerminal(fx, eggs);
 
 playIntro().then(() => {
   document.documentElement.classList.add('ready');

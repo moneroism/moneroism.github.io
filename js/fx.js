@@ -19,6 +19,10 @@ export function initFx() {
   let rainTimer = 0;
   let stormUntil = 0;
   let shake = 0;
+  let mx = -1e4, my = -1e4;
+  let magnet = false;
+  let emojiUntil = 0, emojiChar = '', emojiTimer = 0;
+  addEventListener('pointermove', (e) => ((mx = e.clientX), (my = e.clientY)), { passive: true });
 
   // fps probe for auto potato
   let probeStart = 0, probeFrames = 0, probed = false;
@@ -79,8 +83,24 @@ export function initFx() {
       }
     }
 
+    if (performance.now() < emojiUntil) {
+      emojiTimer -= dt;
+      if (emojiTimer <= 0) {
+        emojiTimer = 0.04;
+        parts.push({ x: Math.random() * W, y: -30, vx: (Math.random() - 0.5) * 40, vy: 100, life: 3, max: 3, size: 22 + Math.random() * 18, ch: emojiChar, g: 500 });
+      }
+    }
+
     for (let i = coins.length - 1; i >= 0; i--) {
       const c = coins[i];
+      if (magnet) {
+        const dx = mx - c.x, dy = my - c.y, d = Math.max(30, Math.hypot(dx, dy));
+        c.vx += (dx / d) * 4000 * dt;
+        c.vy += (dy / d) * 4000 * dt - G * dt * 0.9;
+        c.vx *= 0.97;
+        c.vy *= 0.97;
+        c.resting = 0;
+      }
       c.vy += G * dt;
       c.x += c.vx * dt;
       c.y += c.vy * dt;
@@ -146,9 +166,14 @@ export function initFx() {
     }
 
     for (const p of parts) {
-      ctx.globalAlpha = Math.max(0, p.life / p.max);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.max * 2));
+      if (p.ch) {
+        ctx.font = `${p.size}px serif`;
+        ctx.fillText(p.ch, p.x, p.y);
+      } else {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      }
     }
     ctx.globalAlpha = 1;
   }
@@ -222,6 +247,16 @@ export function initFx() {
     },
     shake(n = 10) {
       shake = n;
+    },
+    rainOf(ch, ms = 4000) {
+      emojiChar = ch;
+      emojiUntil = performance.now() + ms;
+    },
+    setMagnet(v) {
+      magnet = v;
+    },
+    coin(x, y, opts) {
+      coin(x, y, opts);
     },
   };
 }

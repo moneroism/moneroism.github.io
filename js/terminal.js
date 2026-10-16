@@ -5,7 +5,7 @@ import { playIntro } from './intro.js';
 
 const $ = (s) => document.querySelector(s);
 
-export function initTerminal(fx) {
+export function initTerminal(fx, eggs) {
   const term = $('#term');
   const out = $('#term-out');
   const input = $('#term-in');
@@ -74,10 +74,74 @@ export function initTerminal(fx) {
     storm: ['make it rain', () => (close(), fx?.storm(8000))],
     intro: ['replay the loading intro', () => (close(), playIntro({ force: true }))],
     clear: ['clear screen', () => (out.textContent = '')],
-    exit: ['close terminal', () => close()],
     // hidden
-    sudo: [null, () => print('no.', 'err')],
-    ls: [null, () => print('about  projects  contact  donate')],
+    sudo: [null, () => (print('no.', 'err'), eggs?.unlock('sudo'))],
+    ls: [null, (a) => print((a[0] === '-a' || a[0] === '-la' ? '.  ..  .secret  ' : '') + 'about  projects  contact  donate')],
+    cat: [null, (a) => {
+      if (a[0] === '.secret') {
+        print('things to type on the page (not in here):', 'hl');
+        print('  xmr  monero  barrel  gravity  spud  matrix  boom  bitcoin');
+        print('also: hold m. click the big coin a lot. konami code. triple-click the footer. wait 45s.');
+      } else print(`cat: ${a[0] ?? ''}: try 'about' or 'projects'`, 'err');
+    }],
+    echo: [null, (a) => print(a.join(' '))],
+    date: [null, () => print(new Date().toString())],
+    history: [null, () => history.forEach((h, i) => print(`${String(i + 1).padStart(4)}  ${h}`))],
+    rm: [null, (a) => (a.includes('-rf') ? (print('ok :)', 'err'), close(), eggs?.selfDestruct()) : print('rm: missing operand', 'err'))],
+    neofetch: ['system info, with a coin', () => {
+      const logo = ['    .-----.    ', '  .\'       \'.  ', ' /  |\\_/|  \\ ', '|   | \\ |   |', ' \\  |   |  / ', '  \'._____.\'  '];
+      const info = [
+        'moneroism@xmr', '-------------', 'OS: the internet', `Uptime: ${Math.round(performance.now() / 1000)}s`,
+        'Shell: this thing', `Resolution: ${innerWidth}x${innerHeight}`, `Achievements: ${eggs ? eggs.list().filter((x) => x.got).length : 0}/${eggs ? eggs.list().length : 0}`,
+        `Balance: ${eggs?.balance() ?? 0} xmr (fake)`,
+      ];
+      for (let i = 0; i < Math.max(logo.length, info.length); i++) print(`${(logo[i] ?? '').padEnd(16)}  ${info[i] ?? ''}`);
+    }],
+    cowsay: ['moo', (a) => {
+      const msg = a.join(' ') || 'privacy is not a crime';
+      print(' ' + '_'.repeat(msg.length + 2));
+      print(`< ${msg} >`);
+      print(' ' + '-'.repeat(msg.length + 2));
+      ['        \\   ^__^', '         \\  (oo)\\_______', '            (__)\\  xmr  )\\/\\', '                ||----w |', '                ||     ||'].forEach((l) => print(l));
+    }],
+    fortune: ['a random line', () => {
+      const f = ['privacy is not a crime.', "verify, don't trust.", 'free as in freedom, not as in beer.', "if you're not paying, you're the product.", 'read the source, luke.', 'there is no cloud, just someone else\'s computer.', 'rtfm.', 'it works on my machine.'];
+      print(f[(Math.random() * f.length) | 0]);
+    }],
+    coinflip: ['heads or tails', () => print(Math.random() < 0.5 ? 'heads (the M side)' : 'tails (the grey side)')],
+    price: ['current xmr price', () => print('priceless. (this page makes no network requests, so i genuinely cannot check)')],
+    balance: ['fake mining balance', () => print(`${eggs?.balance() ?? 0} xmr. fake. worthless. yours.`)],
+    hack: ['hack the mainframe', async () => {
+      eggs?.unlock('hack');
+      const lines = ['bypassing firewall...', 'decrypting ring signatures...', 'tracing stealth address...', 'ERROR: monero is private. there is nothing to trace.', 'access denied. good.'];
+      for (const l of lines) {
+        for (let i = 0; i < 3; i++) print(Array.from({ length: 48 }, () => '0123456789abcdef'[(Math.random() * 16) | 0]).join(''), 'dim');
+        print(l, l.startsWith('ERROR') ? 'err' : 'hl');
+        body.scrollTop = body.scrollHeight;
+        await new Promise((r) => setTimeout(r, 450));
+      }
+    }],
+    barrel: ['do a barrel roll', () => (close(), setTimeout(() => eggs?.barrel(), 250))],
+    gravity: ['turn on gravity', () => (close(), setTimeout(() => eggs?.gravity(), 250))],
+    selfdestruct: ['do not run this', () => (close(), eggs?.selfDestruct())],
+    spud: [null, () => (close(), eggs?.spud())],
+    matrix: [null, () => (close(), eggs?.matrix())],
+    achievements: ['what you have found', () => {
+      const l = eggs?.list() ?? [];
+      print(`${l.filter((x) => x.got).length}/${l.length} unlocked`, 'hl');
+      l.forEach((x) => print(`  ${x.got ? '[x]' : '[ ]'} ${x.got ? x.name.padEnd(28) + x.desc : '???'}`, x.got ? '' : 'dim'));
+    }],
+    exit: ['close terminal', () => close()],
+    sl: [null, async () => {
+      const train = ['      ====        ________', '  _D _|  |_______/        \\__I_I_____', '   |(_)---  |   H\\________/ |   |', '   /     |  |   H  |  |     |   |', '  |      |  |   H  |__-----------------|', '  |______|=|___H__/__|_____________|'];
+      const pre = document.createElement('div');
+      out.append(pre);
+      for (let x = 40; x > -50; x -= 2) {
+        pre.textContent = train.map((l) => (x > 0 ? ' '.repeat(x) + l : l.slice(-x))).join('\n');
+        await new Promise((r) => setTimeout(r, 30));
+      }
+      pre.remove();
+    }],
   };
   for (const p of projects) {
     commands[p.id] = [null, () => {
@@ -101,7 +165,7 @@ export function initTerminal(fx) {
     history.push(line);
     hi = history.length;
     const cmd = commands[name.toLowerCase()];
-    if (cmd) cmd[1](args);
+    if (cmd) Promise.resolve(cmd[1](args)).then(() => (body.scrollTop = body.scrollHeight));
     else print(`${name}: command not found. try 'help'`, 'err');
   }
 
@@ -126,6 +190,7 @@ export function initTerminal(fx) {
 
   let greeted = false;
   function open() {
+    eggs?.unlock('terminal');
     term.hidden = false;
     requestAnimationFrame(() => term.classList.add('open'));
     if (!greeted) {
